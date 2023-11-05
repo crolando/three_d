@@ -1,11 +1,11 @@
 
 # three_d
 
-A simple OpenGL project that opens a window and sets up an OpenGL context using GLFW.
+A simple OpenGL project that opens a window and sets up an OpenGL context using GLFW and GLEW.
 
 ## Description
 
-This project is a starting point for anyone looking to get into 3D graphics programming. It sets up a window and an OpenGL context using the GLFW library.
+This project is a starting point for anyone looking to get into 3D graphics programming. It sets up a window and an OpenGL context using the GLFW library and manages OpenGL extensions with GLEW.
 
 ## Build Instructions
 
@@ -14,6 +14,7 @@ This project is a starting point for anyone looking to get into 3D graphics prog
 - CMake
 - A C++ compiler (e.g., GCC, Clang, MSVC)
 - GLFW
+- GLEW
 
 ### macOS
 
@@ -23,10 +24,10 @@ This project is a starting point for anyone looking to get into 3D graphics prog
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-2. Install GLFW using Homebrew:
+2. Install GLFW and GLEW using Homebrew:
 
 ```sh
-brew install glfw
+brew install glfw glew
 ```
 
 3. Navigate to the project directory and create a build directory:
@@ -51,7 +52,7 @@ cmake --build .
 ### Windows
 
 1. Install CMake and a C++ compiler (if not already installed).
-2. Install GLFW. You can download pre-compiled binaries or use a package manager like vcpkg.
+2. Install GLFW and GLEW. You can download pre-compiled binaries or use a package manager like vcpkg.
 3. Open a command prompt or PowerShell in the project directory.
 4. Create a build directory:
 
@@ -79,7 +80,7 @@ cmake --build .
 
 ```sh
 sudo apt-get update
-sudo apt-get install cmake xorg-dev libglfw3-dev
+sudo apt-get install cmake xorg-dev libglfw3-dev libglew-dev
 ```
 
 2. Navigate to the project directory and create a build directory:
