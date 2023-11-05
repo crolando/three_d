@@ -1,4 +1,4 @@
-```markdown
+
 # three_d
 
 A simple OpenGL project that opens a window and sets up an OpenGL context using GLFW.
@@ -112,6 +112,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-```
-
-Replace `path/to/three_d` with the actual path to your project directory. 
