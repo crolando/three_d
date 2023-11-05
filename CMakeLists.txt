@@ -7,7 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find the required packages
 find_package(glfw3 REQUIRED)
-find_package(GLEW REQUIRED CONFIG)
+if(APPLE)
+	find_package(GLEW REQUIRED CONFIG)
+else()
+	find_package(GLEW REQUIRED)
+endif()
 
 # Add the executable with main.cpp and shader_loader.cpp
 add_executable(${PROJECT_NAME} main.cpp shader_loader.cpp)
