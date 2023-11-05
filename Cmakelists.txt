@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.0)
+project(OpenGLApp)
+
+# Find the GLFW3 library
+find_package(glfw3 REQUIRED)
+
+# Specify the C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Add the executable
+add_executable(OpenGLApp main.cpp)
+
+# On Windows, this will define GLFW_DLL if you are linking against the DLL version of GLFW
+# If you're using static GLFW lib, you might need to define GLFW_STATIC
+if(WIN32)
+    target_compile_definitions(OpenGLApp PRIVATE GLFW_DLL)
+endif()
+
+# Link against the GLFW library
+target_link_libraries(OpenGLApp glfw)
+
+# If you have other libraries to link (like OpenGL, GLEW, etc.), you can do so like this:
+# find_package(OpenGL REQUIRED)
+# target_link_libraries(OpenGLApp ${OPENGL_gl_LIBRARY})
+
+# For systems that support pkg-config, you can use it to find other libraries
+# find_package(PkgConfig REQUIRED)
+# pkg_search_module(GL REQUIRED gl)
+
+# Then link using the pkg-config flags
+# target_link_libraries(OpenGLApp ${GL_LIBRARIES})
+
