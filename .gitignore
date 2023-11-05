@@ -1,32 +1,95 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
+# Standard C++ ignores
 *.o
+*.d
+*.out
+*.exe
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
 *.lib
+*.dll
+*.a
+*.pdb
+*.idb
+*.class
+*.sdf
+*.suo
+*.ipch
+*.ilk
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*.user
+*.userprefs
+*.usertasks
+*.sublime-workspace
+*.sublime-project
+Debug/
+Release/
+*.log
+*.tlog
+*.log
+*.iobj
+*.ipdb
+*.err
+*.bak
+*.old
+*.orig
+*.precompiled
+*.rej
+*.swo
+*.swp
+*.vi
+*.tmp
+*.temp
+*.cache
+*.ilk
+*.to_delete
 
-# Executables
-*.exe
-*.out
-*.app
+# Editor directories and files
+.vs/
+.vscode/
+*.code-workspace
+*~
+.DS_Store
+Thumbs.db
+
+# Build directories
+build/
+bin/
+obj/
+lib/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.make
+*.cmake
+CTestTestfile.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+CMakeDoxygenOptions.cmake
+
+# Ignore the install directory
+install/
+
+# If you're using CMake's user-specific files or have other build types, ignore those directories too
+*_build/
+*_builds/
+__build__/
+CustomBuilds/
+
+# Ignore package manager directories
+vcpkg/
+.vcpkg-root
+vcpkg_installed/
+
+# Ignore other files that may contain sensitive information or machine-specific configurations
+*.user
+*.patch
