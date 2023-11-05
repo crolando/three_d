@@ -33,14 +33,18 @@ std::string readShaderFile(const char* shaderPath) {
 }
 
 GLuint compileShader(const char* shaderPath, GLenum shaderType) {
+    std::cout << "About to compile the shader..." << std::endl;
     std::string shaderCode = readShaderFile(shaderPath);
     const char* shaderCodeCStr = shaderCode.c_str();
 
     // Create the shader object
     GLuint shader = glCreateShader(shaderType);
+    std::cout << "glCreateShader returned sucessfully" << std::endl;
     glShaderSource(shader, 1, &shaderCodeCStr, NULL);
     glCompileShader(shader);
 
+    std::cout << "Shader object created" << std::endl;
+    
     // Check for shader compile errors
     GLint success;
     GLchar infoLog[512];
@@ -48,6 +52,8 @@ GLuint compileShader(const char* shaderPath, GLenum shaderType) {
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+    } else {
+        std::cout << "Shader Compiled" << std::endl;
     }
 
     return shader;

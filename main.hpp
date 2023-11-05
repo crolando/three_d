@@ -8,6 +8,6 @@
 #ifndef main_hpp
 #define main_hpp
 
-#include <stdio.h>
+#include <iostream>
 
 #endif /* main_hpp */
