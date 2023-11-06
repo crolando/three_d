@@ -1,5 +1,8 @@
 #include "main.hpp"
 #include "shader_loader.h"
+#ifdef USE_OPENGLES
+	#define GLFW_INCLUDE_ES3
+#endif
 #include <GLFW/glfw3.h>
 
 // Constants
@@ -48,10 +51,12 @@ int main(void) {
 
     glfwMakeContextCurrent(window);
     
-    if(!initializeGlew()) {
-        glfwTerminate();
-        return -1;
-    }
+    #ifndef USE_OPENGLES
+		if(!initializeGlew()) {
+			glfwTerminate();
+			return -1;
+		}
+    #endif
     
     GLuint shaderProgram = createShaderProgram(VERT_SHADER_PATH,FRAG_SHADER_PATH);
     if (shaderProgram == 0) {
@@ -95,24 +100,32 @@ bool initializeGlfw() {
     if (!glfwInit()) {
         return false;
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // This is required on Mac
+    #ifdef USE_OPENGLES
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // This is required on Mac
+    #else 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // This is required on Mac
+    #endif
     return true;
 }
-
-bool initializeGlew() {
-    // Initialize GLEW
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        // Problem: glewInit failed, something is seriously wrong.
-        std::cerr << "Error with glewInit: " << glewGetErrorString(err) << std::endl;
-        return false;
-    }
-    return true;
-}
-
+#ifndef USE_OPENGLES
+	bool initializeGlew() {
+		// Initialize GLEW
+		GLenum err = glewInit();
+		if (GLEW_OK != err) {
+			// Problem: glewInit failed, something is seriously wrong.
+			std::cerr << "Error with glewInit: " << glewGetErrorString(err) << std::endl;
+			return false;
+		}
+		return true;
+	}
+#endif
 GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
         
     // Compile Shader from File

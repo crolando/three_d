@@ -2,7 +2,12 @@
 #ifndef SHADER_LOADER_H
 #define SHADER_LOADER_H
 
-#include <GL/glew.h>
+#ifdef USE_OPENGLES
+	#include <GLES3/gl3.h>
+#else
+	#include <GL/glew.h>
+#endif
+
 #include <string>
 
 std::string readShaderFile(const char* shaderPath);

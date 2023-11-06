@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 project(three_d)
 
 # Specify the C++ standard
@@ -7,21 +7,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find the required packages
 find_package(glfw3 REQUIRED)
-if(APPLE)
-	find_package(GLEW REQUIRED CONFIG)
+find_package(OpenGL REQUIRED)
+
+if(UNIX AND NOT APPLE)
+    # Raspberry Pi
+    add_definitions(-DUSE_OPENGLES)
+elseif(APPLE)
+    # Mac
+    find_package(GLEW REQUIRED CONFIG)
 else()
-	find_package(GLEW REQUIRED)
+    # Windows - untested
+    find_package(GLEW REQUIRED)
 endif()
 
 # Add the executable with main.cpp and shader_loader.cpp
 add_executable(${PROJECT_NAME} main.cpp shader_loader.cpp)
 
-# Link against the GLFW and GLEW libraries
-target_link_libraries(${PROJECT_NAME} glfw GLEW::GLEW)
+# Link with the libraries
+target_link_libraries(${PROJECT_NAME} glfw)
+if(UNIX AND NOT APPLE)
+    # Link against OpenGL ES for Raspberry Pi
+    target_link_libraries(${PROJECT_NAME} GLESv2)
+else()
+    # Link against OpenGL for desktop systems
+    if(OpenGL_GL_PREFERENCE STREQUAL "GLVND")
+        target_link_libraries(${PROJECT_NAME} OpenGL::OpenGL)
+    elseif(OpenGL_GL_PREFERENCE STREQUAL "LEGACY")
+        target_link_libraries(${PROJECT_NAME} OpenGL::GL)
+    endif()
+endif()
 
-# Include directories for GLEW
-include_directories(${GLEW_INCLUDE_DIRS}) # Add this line to include GLEW headers
+if(GLEW_FOUND)
+    target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
+endif()
 
-# If you have other libraries to link (like OpenGL), you can do so like this:
-# find_package(OpenGL REQUIRED)
-# target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARIES})
+# Include directories for GLEW and OpenGL
+if(GLEW_FOUND)
+    include_directories(${GLEW_INCLUDE_DIRS})
+endif()
