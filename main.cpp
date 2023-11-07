@@ -17,6 +17,8 @@ bool initializeGlfw();
 bool initializeGlew();
 GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath);
 void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &quadVBO);
+void glfwErrorCallback(int error, const char* description);
+
 
 // Full-screen quad vertices
 float quadVertices[] = {
@@ -29,13 +31,6 @@ float quadVertices[] = {
      1.0f, -1.0f,  1.0f, 0.0f,
      1.0f,  1.0f,  1.0f, 1.0f
 };
-
-
-void glfwErrorCallback(int error, const char* description)
-{
-    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
-    std::cerr << description << std::endl;
-}
 
 int main(void) {
     
@@ -88,6 +83,7 @@ int main(void) {
     // Clean up VAO and VBO objects
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &quadVBO);
+    glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;
@@ -174,3 +170,8 @@ void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &q
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void glfwErrorCallback(int error, const char* description)
+{
+    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
+    std::cerr << description << std::endl;
+}
