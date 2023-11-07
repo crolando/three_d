@@ -17,8 +17,6 @@ bool initializeGlfw();
 bool initializeGlew();
 GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath);
 void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &quadVBO);
-void glfwErrorCallback(int error, const char* description);
-
 
 // Full-screen quad vertices
 float quadVertices[] = {
@@ -31,6 +29,12 @@ float quadVertices[] = {
      1.0f, -1.0f,  1.0f, 0.0f,
      1.0f,  1.0f,  1.0f, 1.0f
 };
+
+
+void glfwErrorCallback(int error, const char* description) {
+    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
+    std::cerr << description << std::endl;
+}
 
 int main(void) {
     
@@ -83,7 +87,6 @@ int main(void) {
     // Clean up VAO and VBO objects
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &quadVBO);
-    glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;
@@ -141,13 +144,20 @@ GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
     if (!success) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-        return false;
+        return 0;
     }
+    
+    // Detach and delete shaders as they are no longer needed
+    glDetachShader(shaderProgram, vertexShader);
+    glDetachShader(shaderProgram, fragmentShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
     
     // Use the shader program
     glUseProgram(shaderProgram);
 
-    return true;
+    return shaderProgram;
 }
 
 void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &quadVBO) {
@@ -170,8 +180,3 @@ void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &q
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void glfwErrorCallback(int error, const char* description)
-{
-    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
-    std::cerr << description << std::endl;
-}
