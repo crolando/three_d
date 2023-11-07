@@ -27,7 +27,7 @@ This project is a starting point for anyone looking to get into 3D graphics prog
 2. Install GLFW and GLEW using Homebrew:
 
 ```sh
-brew install glfw glew
+brew install glfw glew pkg-config
 ```
 
 3. Navigate to the project directory and create a build directory:
@@ -80,7 +80,7 @@ cmake --build .
 
 ```sh
 sudo apt-get update
-sudo apt-get install cmake xorg-dev libglfw3-dev libglew-dev
+sudo apt-get install cmake xorg-dev libglfw3-dev libglew-dev libgles2-mesa-dev
 ```
 
 2. Navigate to the project directory and create a build directory:
