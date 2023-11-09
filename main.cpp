@@ -6,12 +6,12 @@
 #include <GLFW/glfw3.h>
 
 // Constants
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_WIDTH = 1024;
+const int WINDOW_HEIGHT = 768;
 const char* WINDOW_TITLE = "Hello World";
 const char* VERT_SHADER_PATH = "../quad.vert";
 const char* FRAG_SHADER_PATH = "../quad.frag";
-const char* MANDLEBROT_FRAG_SHADER_PATH = "../mandlebrot.frag";
+const char* MANDLEBROT_FRAG_SHADER_PATH = "../julia.frag";
 
 // Function declarations
 bool initializeGlfw();
@@ -26,6 +26,8 @@ void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods
 float zoom;
 float panX;
 float panY;
+float cX = 0.335; // julia set
+float cY = 0.335;
 
 // Full-screen quad vertices
 float quadVertices[] = {
@@ -96,6 +98,7 @@ int main(void) {
     GLuint zoomLoc = glGetUniformLocation(shaderProgram, "zoom");
     GLuint panLoc = glGetUniformLocation(shaderProgram, "pan");
     GLuint resolutionLoc = glGetUniformLocation(shaderProgram, "resolution");
+    GLuint cLoc = glGetUniformLocation(shaderProgram, "c");
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
@@ -109,6 +112,7 @@ int main(void) {
         glUniform1f(zoomLoc, zoom);
         glUniform2f(panLoc, panX, panY);
         glUniform2f(resolutionLoc, resolution.x, resolution.y);
+        glUniform2f(cLoc, cX, cY);
         
         // Render here
         glBindVertexArray(quadVAO);
@@ -234,6 +238,18 @@ void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods
     float panSpeed = 0.01 * zoom;
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         switch (key) {
+            case GLFW_KEY_O:
+                cX += 0.01;
+                break;
+            case GLFW_KEY_P:
+                cX -= 0.01;
+                break;
+            case GLFW_KEY_K:
+                cY += 0.01;
+                break;
+            case GLFW_KEY_L:
+                cY -= 0.01;
+                break;
             case GLFW_KEY_UP:
                 panY -= panSpeed; // Move up
                 break;
