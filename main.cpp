@@ -11,12 +11,14 @@ const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "Hello World";
 const char* VERT_SHADER_PATH = "../quad.vert";
 const char* FRAG_SHADER_PATH = "../quad.frag";
+const char* MANDLEBROT_FRAG_SHADER_PATH = "../mandlebrot.frag";
 
 // Function declarations
 bool initializeGlfw();
 bool initializeGlew();
 GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath);
 void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &quadVBO);
+void glfwErrorCallback(int error, const char* description);
 
 // Full-screen quad vertices
 float quadVertices[] = {
@@ -31,10 +33,6 @@ float quadVertices[] = {
 };
 
 
-void glfwErrorCallback(int error, const char* description) {
-    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
-    std::cerr << description << std::endl;
-}
 
 int main(void) {
     
@@ -56,12 +54,20 @@ int main(void) {
 			return -1;
 		}
     #endif
-    
-    GLuint shaderProgram = createShaderProgram(VERT_SHADER_PATH,FRAG_SHADER_PATH);
+    GLuint shaderPrograms[2];
+    GLuint shaderProgram = createShaderProgram(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     if (shaderProgram == 0) {
        glfwTerminate();
        return -1;
     }
+    shaderPrograms[0] = shaderProgram;
+    
+    shaderProgram = createShaderProgram(VERT_SHADER_PATH, MANDLEBROT_FRAG_SHADER_PATH);
+    if (shaderProgram == 0) {
+       glfwTerminate();
+       return -1;
+    }
+    shaderPrograms[1] = shaderProgram;
     
     GLuint quadVAO, quadVBO;
     setupQuadVAO(quadVertices, sizeof(quadVertices), quadVAO, quadVBO);
@@ -73,6 +79,9 @@ int main(void) {
     
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
+        
+        glUseProgram(shaderPrograms[1]);
+        
         // Render here
         glBindVertexArray(quadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -180,3 +189,7 @@ void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &q
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void glfwErrorCallback(int error, const char* description) {
+    std::cerr << "GLFW Error callback called. Description is: " << std::endl;
+    std::cerr << description << std::endl;
+}
