@@ -100,6 +100,10 @@ int main(void) {
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
         
+        std::string title = std::to_string(zoom) + " " + std::to_string(panX) + " " + std::to_string(panY);
+        
+        glfwSetWindowTitle(window,title.c_str());
+        
         glUseProgram(shaderPrograms[1]);
         
         glUniform1f(zoomLoc, zoom);
