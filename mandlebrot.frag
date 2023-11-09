@@ -11,6 +11,17 @@ uniform vec2 resolution;
 in vec2 TexCoords;
 out vec4 fragColor;
 
+vec3 getColor(float t) {
+    // Define pastel palette
+    vec3 a = vec3(0.8, 0.9, 0.8); // light tone
+    vec3 b = vec3(0.9, 0.9, 0.9); // medium tone
+    vec3 c = vec3(1.0, 1.0, 1.0); // high tone
+    vec3 d = vec3(0.00, 0.10, 0.20); // phase shift
+
+    // Use a smooth polynomial for interpolation
+    return a + b * cos(6.28318 * (c * t + d));
+}
+
 void main()
 {
     vec2 pos = (TexCoords - vec2(0.5, 0.5)) * zoom - pan;
@@ -29,6 +40,6 @@ void main()
     color = 1.0 - color;
     color = pow(color, 0.3); // gamma correction
     
-    fragColor = vec4(vec3(color), 1.0);
+    fragColor = vec4(getColor(color), 1.0);
 }
 
