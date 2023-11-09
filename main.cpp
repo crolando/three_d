@@ -19,6 +19,13 @@ bool initializeGlew();
 GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath);
 void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &quadVBO);
 void glfwErrorCallback(int error, const char* description);
+void scrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
+void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+// Global var (how callbacks communicate back to this scope)
+float zoom;
+float panX;
+float panY;
 
 // Full-screen quad vertices
 float quadVertices[] = {
@@ -54,6 +61,10 @@ int main(void) {
 			return -1;
 		}
     #endif
+    
+    glfwSetScrollCallback(window, scrollCallBack);
+    glfwSetKeyCallback(window, keyCallBack);
+    
     GLuint shaderPrograms[2];
     GLuint shaderProgram = createShaderProgram(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     if (shaderProgram == 0) {
@@ -77,10 +88,23 @@ int main(void) {
        return -1;
     }
     
+    // Init zoom and pan uniforms
+    zoom = 1.0f;
+    struct uivec2 {unsigned int x; unsigned int y; };
+    uivec2 resolution = {WINDOW_WIDTH, WINDOW_HEIGHT};
+
+    GLuint zoomLoc = glGetUniformLocation(shaderProgram, "zoom");
+    GLuint panLoc = glGetUniformLocation(shaderProgram, "pan");
+    GLuint resolutionLoc = glGetUniformLocation(shaderProgram, "resolution");
+
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
         
         glUseProgram(shaderPrograms[1]);
+        
+        glUniform1f(zoomLoc, zoom);
+        glUniform2f(panLoc, panX, panY);
+        glUniform2f(resolutionLoc, resolution.x, resolution.y);
         
         // Render here
         glBindVertexArray(quadVAO);
@@ -192,4 +216,32 @@ void setupQuadVAO(const float* vertices, size_t size, GLuint &quadVAO, GLuint &q
 void glfwErrorCallback(int error, const char* description) {
     std::cerr << "GLFW Error callback called. Description is: " << std::endl;
     std::cerr << description << std::endl;
+}
+
+void scrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
+    // Use yoffset to zoom in/out
+    float zoomSpeed = 1.0;
+    zoom = zoom + (yoffset * 0.001);
+    
+    //zoom += static_cast<float>(yoffset) * zoomSpeed; // zoomSpeed controls the sensitivity
+}
+
+void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    float panSpeed = 0.01 * zoom;
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        switch (key) {
+            case GLFW_KEY_UP:
+                panY -= panSpeed; // Move up
+                break;
+            case GLFW_KEY_DOWN:
+                panY += panSpeed; // Move down
+                break;
+            case GLFW_KEY_LEFT:
+                panX += panSpeed; // Move left
+                break;
+            case GLFW_KEY_RIGHT:
+                panX -= panSpeed; // Move right
+                break;
+        }
+    }
 }

@@ -1,24 +1,34 @@
-#version 100
+#version 330
+
 #ifdef GL_ES
 precision mediump float;
 #endif
 
-varying vec2 TexCoords;
+uniform float zoom;
+uniform vec2 pan;
+uniform vec2 resolution;
 
-void main() {
-    vec2 c = TexCoords * 2.0 - 1.0; // Transform from [0,1] to [-1,1]
-    vec2 z = vec2(0.0);
+in vec2 TexCoords;
+out vec4 fragColor;
+
+void main()
+{
+    vec2 pos = (TexCoords - vec2(0.5, 0.5)) * zoom - pan;
+    
+    int max_iter = 300;
+    vec2 c = pos;
+    vec2 z = vec2(0.0, 0.0);
     int n;
-
-    for(int i = 0; i < 100; i++) {
-        z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
-
-        if (dot(z, z) > 4.0) {
-            break;
-        }
-        n = i;
+    for(n = 0; n < max_iter; n++)
+    {
+        if(dot(z, z) > 4.0) break;
+        z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
     }
-
-    float color = float(n) / 100.0;
-    gl_FragColor = vec4(color, color, color, 1.0);
+    
+    float color = float(n) / float(max_iter);
+    color = 1.0 - color;
+    color = pow(color, 0.3); // gamma correction
+    
+    fragColor = vec4(vec3(color), 1.0);
 }
+

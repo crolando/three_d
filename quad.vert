@@ -1,16 +1,16 @@
-#version 100
+#version 330
+
 #ifdef GL_ES
-precision mediump float;
+    precision mediump float; // This is needed for OpenGL ES, ignored in OpenGL
 #endif
 
-attribute vec2 aPos;
-attribute vec2 aTexCoords;
+in vec2 aPos;
+in vec2 aTexCoords;
 
-varying vec2 TexCoords;
+out vec2 TexCoords;
 
 void main()
 {
     TexCoords = aTexCoords;
-    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+    gl_Position = vec4(aPos, 0.0, 1.0);
 }
-
